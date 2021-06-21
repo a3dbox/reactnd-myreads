@@ -1,6 +1,8 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
 import {Link, Route} from 'react-router-dom'
+import { DragDropContext } from 'react-beautiful-dnd';
+
 
 import './App.css'
 import {Bookshelf} from "./components/Bookshelf";
@@ -22,11 +24,11 @@ class BooksApp extends React.Component {
                   <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
-                  <div>
-                    <Bookshelf title={'Currently Reading'}/>
-                    <Bookshelf title={'Wand to Read'}/>
-                    <Bookshelf title={'Read'}/>
-                  </div>
+                  <DragDropContext>
+                      <Bookshelf title={'Currently Reading'}/>
+                      <Bookshelf title={'Wand to Read'}/>
+                      <Bookshelf title={'Read'}/>
+                  </DragDropContext>
                 </div>
 
                 <div className="open-search">
