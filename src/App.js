@@ -9,43 +9,72 @@ import {Bookshelf} from "./components/Bookshelf";
 import {BookSearch} from "./components/BookSearch";
 
 class BooksApp extends React.Component {
-    shelves = ["Currently Reading", "Want to Read", "Read"];
+    shelves = [
+        {title: "Currently Reading", id: "currentlyReading"},
+        {title: "Want to Read", id: "wantToRead"},
+        {title: "Read", id: "read"}]
 
     state = {
-        Books: []
     }
 
     componentDidMount() {
         BooksAPI.getAll()
             .then((books) => {
-                books.map((book, index) => {
-                    return(
-                        book.number = index
-                    );
-                });
+                return (
+                this.shelves.map((shelf) => {
+                    console.log("Shelf: ", shelf);
+                    let filteredBooks = books.filter((book) => book.shelf === shelf.id);
+                    console.log("Filtered Books: ", filteredBooks);
 
-                this.setState({Books: books});
-            })
+                    this.setState({
+                        [shelf.id]: {Books: filteredBooks}
+                    });
+                }));
+            });
+    }
+
+    moveItemInList = (list, fromIndex, toIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(fromIndex, 1);
+        result.splice(toIndex, 0, removed);
+
+        return result;
+    };
+
+    moveItemToShelf = (bookIndex, fromShelf, toIndex, toShelf) => {
+        const fShelfBooks = this.state[fromShelf].Books;
+        const tShelfBooks = this.state[toShelf].Books;
+
+        const removedBook = fShelfBooks.splice(bookIndex, 1);
+        removedBook[0].shelf = toShelf;
+        tShelfBooks.splice(toIndex, 0, removedBook[0]);
+
+        this.setState({[fromShelf]: {Books: fShelfBooks}});
+        this.setState({[toShelf]: {Books: tShelfBooks}});
     }
 
     handleOnDragEnd = (result) => {
-        console.log(result);
+        const { source, destination } = result;
 
-        if (!result.destination) return;
+        // dropped outside the list
+        if (!destination) {
+            return;
+        }
 
-       const items = Array.from(this.state.Books);
-        /*console.log("Copy of Books: ", items);
+        if (source.droppableId === destination.droppableId) {
+            const items = this.moveItemInList(
+                this.state[source.droppableId].Books,
+                source.index,
+                destination.index
+            );
 
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        console.log("Splice: ", reorderedItem);
-
-        items.splice(result.destination.index, 0, reorderedItem);
-        console.log("Splice Back: ", items);*/
-
-        items[result.source.index].shelf = result.destination.droppableId;
-        console.log("Shelf Update: ", items);
-
-        this.setState(({Books: items}));
+            this.setState({[source.droppableId]: {Books: items}});
+            return;
+        }
+        else
+        {
+            this.moveItemToShelf(source.index, source.droppableId, destination.index, destination.droppableId);
+        }
     }
 
 
@@ -68,15 +97,18 @@ class BooksApp extends React.Component {
                   <DragDropContext onDragEnd={this.handleOnDragEnd}>
                       {
                           this.shelves.map((shelf) => {
-                              let filteredBooks = this.state.Books.filter((book) => book.shelf.toLowerCase().replace(/\s+/g, '') === shelf.toLowerCase().replace(/\s+/g, ''));
+                              let books = [];
+                              if(this.state[shelf.id])
+                                books = this.state[shelf.id].Books;
 
+                              console.log("Title", shelf.title, shelf.id);
+                              console.log("Books:", books);
                               return (
                                 <Bookshelf
-                                    title={shelf}
-                                    books={filteredBooks}
+                                    shelfData={shelf}
+                                    books={books}
                                 />
                               )
-
                           }
                           )
                       }
