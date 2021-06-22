@@ -1,5 +1,5 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import {Link, Route} from 'react-router-dom'
 import { DragDropContext } from 'react-beautiful-dnd';
 
@@ -9,7 +9,21 @@ import {Bookshelf} from "./components/Bookshelf";
 import {BookSearch} from "./components/BookSearch";
 
 class BooksApp extends React.Component {
-  render() {
+
+    state = {
+        Books: []
+    }
+
+    componentDidMount() {
+        BooksAPI.getAll()
+            .then((books) => {
+                this.setState({Books: books});
+            })
+    }
+
+    render() {
+        console.log("State", this.state);
+
     return (
       <div className="app">
         <Route exact path={'/search'} render={() => {
@@ -25,9 +39,9 @@ class BooksApp extends React.Component {
                 </div>
                 <div className="list-books-content">
                   <DragDropContext>
-                      <Bookshelf title={'Currently Reading'}/>
-                      <Bookshelf title={'Wand to Read'}/>
-                      <Bookshelf title={'Read'}/>
+                      <Bookshelf title={'Currently Reading'} books={this.state.Books} />
+                      <Bookshelf title={'Wand to Read'} books={this.state.Books} />
+                      <Bookshelf title={'Read'} books={this.state.Books} />
                   </DragDropContext>
                 </div>
 
