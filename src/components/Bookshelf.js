@@ -16,7 +16,7 @@ export class Bookshelf extends React.Component {
                             <ol {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
                                 {books.map((book, index) => {
                                     return (
-                                        <Draggable key={book.id} draggableId={book.id} index={index}>
+                                        <Draggable key={book.id} draggableId={book.id} index={book.number}>
                                             {(provided) => (
                                                 <li {...provided.draggableProps}
                                                     ref={provided.innerRef} {...provided.dragHandleProps}>
