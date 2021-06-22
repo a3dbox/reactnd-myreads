@@ -9,6 +9,7 @@ import {Bookshelf} from "./components/Bookshelf";
 import {BookSearch} from "./components/BookSearch";
 
 class BooksApp extends React.Component {
+    shelves = ["Currently Reading", "Want to Read", "Read"];
 
     state = {
         Books: []
@@ -21,8 +22,19 @@ class BooksApp extends React.Component {
             })
     }
 
+    handleOnDragEnd = (result) => {
+        console.log(result);
+
+        if (!result.destination) return;
+
+        const items = Array.from(this.state.Books);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        items[result.source.index].shelf = result.destination.droppableId;
+        this.setState(({Books: items}));
+    }
+
     render() {
-        console.log("State", this.state);
 
     return (
       <div className="app">
@@ -38,10 +50,10 @@ class BooksApp extends React.Component {
                   <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
-                  <DragDropContext>
-                      <Bookshelf title={'Currently Reading'} books={this.state.Books} />
-                      <Bookshelf title={'Wand to Read'} books={this.state.Books} />
-                      <Bookshelf title={'Read'} books={this.state.Books} />
+                  <DragDropContext onDragEnd={this.handleOnDragEnd}>
+                      {this.shelves.map((shelf) => (
+                        <Bookshelf title={shelf} books={this.state.Books.filter((book) => book.shelf.toLowerCase().replace(/\s+/g, '') === shelf.toLowerCase().replace(/\s+/g, ''))} />
+                      ))}
                   </DragDropContext>
                 </div>
 
