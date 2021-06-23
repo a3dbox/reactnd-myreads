@@ -58,6 +58,9 @@ class BooksApp extends React.Component {
 
         // dropped outside the list
         if (!destination) {
+            let books = this.state[source.droppableId].Books;
+            books.splice(source.index, 1);
+            this.setState({[source.droppableId]: {Books: books}});
             return;
         }
 
@@ -88,11 +91,14 @@ class BooksApp extends React.Component {
           ); }}
         />
         <Route exact path={'/'} render={() => {
-          return (
-              <div className="list-books">
-                <div className="list-books-title">
-                  <h1>MyReads</h1>
-                </div>
+            return (
+                <div className="list-books">
+                    <div className="list-books-title">
+                        <h1>My Reads</h1>
+                        <p>Drag and drop books between the shelves.</p>
+                        <p>Drag a book off your bookshelf to delete it.</p>
+                    </div>
+
                 <div className="list-books-content">
                   <DragDropContext onDragEnd={this.handleOnDragEnd}>
                       {

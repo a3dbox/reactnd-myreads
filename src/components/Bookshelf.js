@@ -8,10 +8,10 @@ export class Bookshelf extends React.Component {
         const {shelfData, books} = this.props;
 
         return (
-            <div className="bookshelf">
-                <h2 className="bookshelf-title">{shelfData.title}</h2>
-                <Droppable droppableId={shelfData.id}  direction="horizontal">
-                    {(provided) => (
+            <Droppable droppableId={shelfData.id}  direction="horizontal">
+                {(provided) => (
+                    <div className="bookshelf">
+                        <h2 className="bookshelf-title">{shelfData.title}</h2>
                         <div className="bookshelf-books">
                             <ol {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
                                 {books.map((book, index) => {
@@ -25,15 +25,13 @@ export class Bookshelf extends React.Component {
                                             )}
                                         </Draggable>
                                     )
-                                })
-                                }
+                                })}
                                 {provided.placeholder}
                             </ol>
                         </div>
-
-                    )}
-                </Droppable>
-            </div>
+                    </div>
+                )}
+            </Droppable>
         );
     }
 }
