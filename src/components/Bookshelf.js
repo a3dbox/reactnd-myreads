@@ -8,26 +8,26 @@ export class Bookshelf extends React.Component {
         const {shelfData, books} = this.props;
 
         return (
-            <Droppable droppableId={shelfData.id}  direction="horizontal">
+            <Droppable droppableId={shelfData.id} direction="horizontal">
                 {(provided) => (
                     <div className="bookshelf">
                         <h2 className="bookshelf-title">{shelfData.title}</h2>
                         <div className="bookshelf-books">
-                            <ol {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
+                            <div {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
                                 {books.map((book, index) => {
                                     return (
                                         <Draggable key={book.id} draggableId={book.id} index={index}>
                                             {(provided) => (
-                                                <li {...provided.draggableProps}
-                                                    ref={provided.innerRef} {...provided.dragHandleProps}>
+                                                <div {...provided.draggableProps}
+                                                     ref={provided.innerRef} {...provided.dragHandleProps}>
                                                     <Book bookData={book}/>
-                                                </li>
+                                                </div>
                                             )}
                                         </Draggable>
                                     )
                                 })}
                                 {provided.placeholder}
-                            </ol>
+                            </div>
                         </div>
                     </div>
                 )}

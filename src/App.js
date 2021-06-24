@@ -1,7 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import {Link, Route} from 'react-router-dom'
-import { DragDropContext } from 'react-beautiful-dnd';
+import {DragDropContext} from 'react-beautiful-dnd';
 
 
 import './App.css'
@@ -14,22 +14,18 @@ class BooksApp extends React.Component {
         {title: "Want to Read", id: "wantToRead"},
         {title: "Read", id: "read"}]
 
-    state = {
-    }
+    state = {}
 
     componentDidMount() {
         BooksAPI.getAll()
             .then((books) => {
-                return (
-                this.shelves.map((shelf) => {
+                this.shelves.forEach((shelf) => {
                     console.log("Shelf: ", shelf);
                     let filteredBooks = books.filter((book) => book.shelf === shelf.id);
                     console.log("Filtered Books: ", filteredBooks);
 
-                    this.setState({
-                        [shelf.id]: {Books: filteredBooks}
-                    });
-                }));
+                    this.setState({[shelf.id]: {Books: filteredBooks}});
+                });
             });
     }
 
@@ -54,7 +50,7 @@ class BooksApp extends React.Component {
     }
 
     handleOnDragEnd = (result) => {
-        const { source, destination } = result;
+        const {source, destination} = result;
 
         // dropped outside the list
         if (!destination) {
@@ -73,9 +69,7 @@ class BooksApp extends React.Component {
 
             this.setState({[source.droppableId]: {Books: items}});
             return;
-        }
-        else
-        {
+        } else {
             this.moveItemToShelf(source.index, source.droppableId, destination.index, destination.droppableId);
         }
     }
@@ -83,54 +77,53 @@ class BooksApp extends React.Component {
 
     render() {
 
-    return (
-      <div className="app">
-        <Route exact path={'/search'} render={() => {
-          return (
-            <BookSearch/>
-          ); }}
-        />
-        <Route exact path={'/'} render={() => {
-            return (
-                <div className="list-books">
-                    <div className="list-books-title">
-                        <h1>My Reads</h1>
-                        <p>Drag and drop books between the shelves.</p>
-                        <p>Drag a book off your bookshelf to delete it.</p>
-                    </div>
+        return (
+            <div className="app">
+                <Route exact path={'/search'} render={() => {
+                    return (
+                        <BookSearch/>
+                    );
+                }}
+                />
+                <Route exact path={'/'} render={() => {
+                    return (
+                        <div className="list-books">
+                            <div className="list-books-title">
+                                <h1>My Reads</h1>
+                                <p>Drag and drop books between the shelves.</p>
+                                <p>Drag a book off your bookshelf to delete it.</p>
+                            </div>
 
-                <div className="list-books-content">
-                  <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                      {
-                          this.shelves.map((shelf) => {
-                              let books = [];
-                              if(this.state[shelf.id])
-                                books = this.state[shelf.id].Books;
+                            <div className="list-books-content">
+                                <DragDropContext onDragEnd={this.handleOnDragEnd}>
+                                    {
+                                        this.shelves.map((shelf, index) => {
+                                            let books = [];
+                                            if (this.state[shelf.id]) {
+                                                books = this.state[shelf.id].Books;
+                                            }
 
-                              console.log("Title", shelf.title, shelf.id);
-                              console.log("Books:", books);
-                              return (
-                                <Bookshelf
-                                    shelfData={shelf}
-                                    books={books}
-                                />
-                              )
-                          }
-                          )
-                      }
-                  </DragDropContext>
-                </div>
+                                            return (
+                                                <Bookshelf key={index}
+                                                           shelfData={shelf}
+                                                           books={books}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </DragDropContext>
+                            </div>
 
-                <div className="open-search">
-                  <Link className='open-search-button' to={'/search'}>Add a book</Link>
-                </div>
-              </div>
-            );
-          }}
-        />
-      </div>
-    )
-  }
+                            <div className="open-search">
+                                <Link className='open-search-button' to={'/search'}>Add a book</Link>
+                            </div>
+                        </div>
+                    );
+                }}
+                />
+            </div>
+        )
+    }
 }
 
 export default BooksApp
