@@ -45,8 +45,25 @@ class BooksApp extends React.Component {
         removedBook[0].shelf = toShelf;
         tShelfBooks.splice(toIndex, 0, removedBook[0]);
 
-        this.setState({[fromShelf]: {Books: fShelfBooks}});
-        this.setState({[toShelf]: {Books: tShelfBooks}});
+        BooksAPI.update(removedBook[0], toShelf)
+            .then((response) => {
+                console.log("Response: ", response);
+
+                this.setState({[fromShelf]: {Books: fShelfBooks}});
+                this.setState({[toShelf]: {Books: tShelfBooks}});
+            })
+    }
+
+    removeItemFromBookcase = (bookIndex, fromShelf) => {
+        let books = this.state[fromShelf].Books;
+        const removedBooks = books.splice(bookIndex, 1);
+        console.log("Removed Book:", removedBooks[0]);
+        BooksAPI.update(removedBooks[0], "none")
+            .then((response) => {
+                console.log("Response: ", response);
+
+                this.setState({[fromShelf]: {Books: books}});
+            })
     }
 
     handleOnDragEnd = (result) => {
@@ -54,9 +71,7 @@ class BooksApp extends React.Component {
 
         // dropped outside the list
         if (!destination) {
-            let books = this.state[source.droppableId].Books;
-            books.splice(source.index, 1);
-            this.setState({[source.droppableId]: {Books: books}});
+            this.removeItemFromBookcase(source.id, source.droppableId);
             return;
         }
 
@@ -79,13 +94,15 @@ class BooksApp extends React.Component {
 
         return (
             <div className="app">
+
+
                 <Route exact path={'/search'} render={() => {
                     return (
                         <BookSearch/>
                     );
                 }}
                 />
-                <Route exact path={'/'} render={() => {
+                <Route path={'/'} render={() => {
                     return (
                         <div className="list-books">
                             <div className="list-books-title">
@@ -114,12 +131,19 @@ class BooksApp extends React.Component {
                                 </DragDropContext>
                             </div>
 
-                            <div className="open-search">
-                                <Link className='open-search-button' to={'/search'}>Add a book</Link>
-                            </div>
+
                         </div>
                     );
                 }}
+                />
+                <Route exact path={"/"} render={() => {
+                    return (
+                        <div className="open-search">
+                            <Link className='open-search-button' to={'/search'}>Add a book</Link>
+                        </div>
+                    );
+                }
+                }
                 />
             </div>
         )

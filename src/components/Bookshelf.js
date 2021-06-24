@@ -4,15 +4,19 @@ import {Droppable, Draggable} from "react-beautiful-dnd";
 
 export class Bookshelf extends React.Component {
 
+    getListStyle = isDraggingOver => ({
+        background: isDraggingOver ? 'lightblue' : 'white',
+    });
+
     render() {
         const {shelfData, books} = this.props;
 
         return (
             <Droppable droppableId={shelfData.id} direction="horizontal">
-                {(provided) => (
+                {(provided, snapshot) => (
                     <div className="bookshelf">
                         <h2 className="bookshelf-title">{shelfData.title}</h2>
-                        <div className="bookshelf-books">
+                        <div className="bookshelf-books" style={this.getListStyle(snapshot.isDraggingOver)}>
                             <div {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
                                 {books.map((book, index) => {
                                     return (
