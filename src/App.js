@@ -94,15 +94,13 @@ class BooksApp extends React.Component {
 
         return (
             <div className="app">
-
-
                 <Route exact path={'/search'} render={() => {
                     return (
                         <BookSearch/>
                     );
                 }}
                 />
-                <Route path={'/'} render={() => {
+                <Route exact path={'/'} render={() => {
                     return (
                         <div className="list-books">
                             <div className="list-books-title">
@@ -130,20 +128,12 @@ class BooksApp extends React.Component {
                                     }
                                 </DragDropContext>
                             </div>
-
-
+                            <div className="open-search">
+                                <Link className='open-search-button' to={'/search'}>Add a book</Link>
+                            </div>
                         </div>
                     );
                 }}
-                />
-                <Route exact path={"/"} render={() => {
-                    return (
-                        <div className="open-search">
-                            <Link className='open-search-button' to={'/search'}>Add a book</Link>
-                        </div>
-                    );
-                }
-                }
                 />
             </div>
         )
