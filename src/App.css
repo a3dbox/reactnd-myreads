@@ -191,6 +191,22 @@ button:active {
   background: #eee;
 }
 
+.book-cover-no-image {
+  align-items: center;
+  border: 1px #DFE1E5 solid;
+  color: #70757A;
+  display: flex;
+  height: 140px;
+  line-height: 16px;
+  width: 100px;
+}
+
+.book-cover-no-image-text {
+  flex-grow: 1;
+  padding: 8px;
+  text-align: center;
+}
+
 .book-cover-title {
   padding: 20px 10px 0;
   text-align: center;

@@ -9,33 +9,38 @@ export class Bookshelf extends React.Component {
     });
 
     render() {
-        const {shelfData, books} = this.props;
-
+        let {shelfData, books} = this.props;
+        if(books === undefined || books.length === 0)
+        {
+            books = [];
+        }
+        console.log(books);
         return (
-            <Droppable droppableId={shelfData.id} direction="horizontal">
-                {(provided, snapshot) => (
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">{shelfData.title}</h2>
-                        <div className="bookshelf-books" style={this.getListStyle(snapshot.isDraggingOver)}>
-                            <div {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
-                                {books.map((book, index) => {
-                                    return (
-                                        <Draggable key={book.id} draggableId={book.id} index={index}>
-                                            {(provided) => (
-                                                <div {...provided.draggableProps}
-                                                     ref={provided.innerRef} {...provided.dragHandleProps}>
-                                                    <Book bookData={book}/>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    )
-                                })}
-                                {provided.placeholder}
+                    <Droppable droppableId={shelfData.id} direction="horizontal">
+                        {(provided, snapshot) => (
+                            <div className="bookshelf">
+                                <h2 className="bookshelf-title">{shelfData.title}</h2>
+                                <div className="bookshelf-books" style={this.getListStyle(snapshot.isDraggingOver)}>
+                                    <div {...provided.droppableProps} ref={provided.innerRef} className="books-grid">
+                                        {books.map((book, index) => {
+                                            return (
+                                                <Draggable key={book.id} draggableId={book.id} index={index}>
+                                                    {(provided) => (
+                                                        <div {...provided.draggableProps}
+                                                             ref={provided.innerRef} {...provided.dragHandleProps}>
+                                                            <Book bookData={book}/>
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            )
+                                        })}
+                                        {provided.placeholder}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                )}
-            </Droppable>
+                        )}
+                    </Droppable>
+
         );
     }
 }

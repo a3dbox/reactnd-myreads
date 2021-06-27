@@ -19,12 +19,7 @@ export class BookSearch extends React.Component {
         this.listBooks(query);
     }
 
-    clearQuery = () => {
-        this.updateQuery('');
-    }
-
     listBooks = (query) => {
-
         if(query.length === 0) {
             return [];
         }
@@ -36,18 +31,19 @@ export class BookSearch extends React.Component {
                 if(newBooks === undefined || newBooks.length === 0) {
                     newBooks = [];
                 }
+
                 this.setState({"results": newBooks});
             })
     }
 
     addBook = (book) => {
-        this.setState(() => {
-            let filteredBooks = this.state.results.filter((eachBook) => {
-                return eachBook.id !== book.id;
-            });
+        console.log("BookSearch Add Book:", book);
 
-            return ({"results": filteredBooks});
+        let filteredBooks = this.state.results.filter((eachBook) => {
+            return eachBook.id !== book.id;
         });
+
+        this.setState(() => ({"results": filteredBooks}));
 
         this.props.addBook(book);
     }

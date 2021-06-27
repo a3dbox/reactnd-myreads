@@ -5,8 +5,7 @@ import {Droppable, Draggable} from "react-beautiful-dnd";
 export class BookshelfAdd extends React.Component {
 
     handleAddBook = (book) => (event) => {
-        //let book = event.target.value;
-        console.log("Add Book:", book);
+        // console.log("From Book Add Book:", book);
         this.props.addBook(book);
     }
 
@@ -25,7 +24,7 @@ export class BookshelfAdd extends React.Component {
                         {books.length > 0 && books.map((book, index) => {
                                 return (
                                     <div>
-                                        <Book key={index} bookData={book} addBook={this.handleAddBook(book)} />
+                                        <Book key={index} bookData={book} addBook={this.handleAddBook} />
                                     </div>
                                 )
                             }

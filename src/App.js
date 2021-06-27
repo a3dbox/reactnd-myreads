@@ -47,7 +47,7 @@ class BooksApp extends React.Component {
 
         BooksAPI.update(removedBook[0], toShelf)
             .then((response) => {
-                console.log("Response: ", response);
+                console.log("Update Response: ", response);
 
                 this.setState({[fromShelf]: {Books: fShelfBooks}});
                 this.setState({[toShelf]: {Books: tShelfBooks}});
@@ -59,8 +59,8 @@ class BooksApp extends React.Component {
         const removedBooks = books.splice(bookIndex, 1);
         console.log("Removed Book:", removedBooks[0]);
         BooksAPI.update(removedBooks[0], "none")
-            .then(() => {
-                // console.log("Response: ", response);
+            .then((response) => {
+                console.log("Remove Response: ", response);
 
                 this.setState({[fromShelf]: {Books: books}});
             })
@@ -89,20 +89,25 @@ class BooksApp extends React.Component {
         }
     }
 
-    addNewBook = (book) => {
-        this.setState( (currentState) => {
-            let newBooks = currentState.wantToRead.Books;
-            newBooks.push(book);
+    // TODO: BUG, deletes wrong book
+    // TODO: Filter searched books to not include ones in your library
 
-            BooksAPI.update(book, "Want to Read")
-                .then(() => {
-                    return ({"wantToRead": {Books: newBooks}})})
-        })
+    addNewBook = (book) => {
+        // console.log("Finally Add Book", book);
+        // book.shelf = "wantToRead";
+
+        BooksAPI.update(book, "wantToRead")
+            .then((response) => {
+                // console.log("Add New Response", response)
+                // newBooks.push(book);
+
+                this.setState( (currentState) => {
+                    return ({"wantToRead": {Books: [...currentState["wantToRead"].Books, book]}})
+                });
+            })
     }
 
-
     render() {
-
         return (
             <div className="app">
                 <Route exact path={'/search'} render={() => {
