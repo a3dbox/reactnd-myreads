@@ -20,9 +20,9 @@ class BooksApp extends React.Component {
         BooksAPI.getAll()
             .then((books) => {
                 this.shelves.forEach((shelf) => {
-                    console.log("Shelf: ", shelf);
+                    // console.log("Shelf: ", shelf);
                     let filteredBooks = books.filter((book) => book.shelf === shelf.id);
-                    console.log("Filtered Books: ", filteredBooks);
+                    // console.log("Filtered Books: ", filteredBooks);
 
                     this.setState({[shelf.id]: {Books: filteredBooks}});
                 });
@@ -59,8 +59,8 @@ class BooksApp extends React.Component {
         const removedBooks = books.splice(bookIndex, 1);
         console.log("Removed Book:", removedBooks[0]);
         BooksAPI.update(removedBooks[0], "none")
-            .then((response) => {
-                console.log("Response: ", response);
+            .then(() => {
+                // console.log("Response: ", response);
 
                 this.setState({[fromShelf]: {Books: books}});
             })
@@ -89,6 +89,17 @@ class BooksApp extends React.Component {
         }
     }
 
+    addNewBook = (book) => {
+        this.setState( (currentState) => {
+            let newBooks = currentState.wantToRead.Books;
+            newBooks.push(book);
+
+            BooksAPI.update(book, "Want to Read")
+                .then(() => {
+                    return ({"wantToRead": {Books: newBooks}})})
+        })
+    }
+
 
     render() {
 
@@ -96,7 +107,7 @@ class BooksApp extends React.Component {
             <div className="app">
                 <Route exact path={'/search'} render={() => {
                     return (
-                        <BookSearch/>
+                        <BookSearch addBook={this.addNewBook}/>
                     );
                 }}
                 />

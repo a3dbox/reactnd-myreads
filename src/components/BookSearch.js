@@ -16,15 +16,14 @@ export class BookSearch extends React.Component {
             query: query.trim()
         }))
 
-        this.listBooks();
+        this.listBooks(query);
     }
 
     clearQuery = () => {
         this.updateQuery('');
     }
 
-    listBooks = () => {
-        let query = this.state.query;
+    listBooks = (query) => {
 
         if(query.length === 0) {
             return [];
@@ -33,12 +32,24 @@ export class BookSearch extends React.Component {
         BooksAPI.search(query)
             .then((result) => {
                 let newBooks = result;
-                console.log("Search Results:", newBooks);
+                // console.log("Search Results:", newBooks);
                 if(newBooks === undefined || newBooks.length === 0) {
                     newBooks = [];
                 }
                 this.setState({"results": newBooks});
             })
+    }
+
+    addBook = (book) => {
+        this.setState(() => {
+            let filteredBooks = this.state.results.filter((eachBook) => {
+                return eachBook.id !== book.id;
+            });
+
+            return ({"results": filteredBooks});
+        });
+
+        this.props.addBook(book);
     }
 
     render() {
@@ -65,6 +76,7 @@ export class BookSearch extends React.Component {
                 <BookshelfAdd
                               shelfData={{title: "Results: " + this.state.query, id: "results"}}
                               books={this.state.results}
+                              addBook={this.addBook}
                 />
             </div>
         </div>;
