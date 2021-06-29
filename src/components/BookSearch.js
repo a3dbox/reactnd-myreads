@@ -44,7 +44,7 @@ export class BookSearch extends React.Component {
     }
 
     addBook = (book) => {
-        console.log("BookSearch Add Book:", book);
+        // console.log("BookSearch Add Book:", book);
 
         let filteredBooks = this.state.results.filter((eachBook) => {
             return eachBook.id !== book.id;

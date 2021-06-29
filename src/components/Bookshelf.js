@@ -14,7 +14,7 @@ export class Bookshelf extends React.Component {
         {
             books = [];
         }
-        console.log(books);
+
         return (
                     <Droppable droppableId={shelfData.id} direction="horizontal">
                         {(provided, snapshot) => (

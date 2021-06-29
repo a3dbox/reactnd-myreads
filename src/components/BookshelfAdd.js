@@ -1,6 +1,5 @@
 import React from "react";
 import {Book} from "./Book";
-import {Droppable, Draggable} from "react-beautiful-dnd";
 
 export class BookshelfAdd extends React.Component {
 
@@ -23,7 +22,7 @@ export class BookshelfAdd extends React.Component {
                     <div className="books-grid">
                         {books.length > 0 && books.map((book, index) => {
                                 return (
-                                    <div>
+                                    <div key={index}>
                                         <Book key={index} bookData={book} addBook={this.handleAddBook} />
                                     </div>
                                 )

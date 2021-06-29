@@ -7,6 +7,7 @@ export class Book extends React.Component {
         const addBook = this.props.addBook;
         let noImage = false;
         let image = '';
+
         if(bookData.imageLinks === undefined || bookData.imageLinks.length === 0) {
             noImage = true;
         } else {
@@ -35,7 +36,6 @@ export class Book extends React.Component {
                 </div>
                 <div className="book-title">{bookData.title}</div>
                 <div className="book-authors">{bookData.authors.map((name) => (name + ", "))}</div>
-
             </div>
         );
     }

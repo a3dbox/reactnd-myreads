@@ -51,7 +51,7 @@ class BooksApp extends React.Component {
 
         BooksAPI.update(removedBook[0], toShelf)
             .then((response) => {
-                console.log("Update Response: ", response);
+                // console.log("Update Response: ", response);
 
                 this.setState({[fromShelf]: {Books: fShelfBooks}});
                 this.setState({[toShelf]: {Books: tShelfBooks}});
@@ -62,11 +62,11 @@ class BooksApp extends React.Component {
         let books = this.state[fromShelf].Books;
         let book = books[bookIndex];
 
-        console.log("Remove Book:", book);
+        // console.log("Remove Book:", book);
 
         BooksAPI.update(book, "none")
             .then((response) => {
-                console.log("Remove Response: ", response);
+                // console.log("Remove Response: ", response);
                 let newBooks = books.filter((item) => item.id !== book.id )
                 this.setState({[fromShelf]: {Books: newBooks}});
             })
@@ -96,13 +96,9 @@ class BooksApp extends React.Component {
     }
 
     addNewBook = (book) => {
-        // console.log("Finally Add Book", book);
-        // book.shelf = "wantToRead";
-
         BooksAPI.update(book, "wantToRead")
             .then((response) => {
                 // console.log("Add New Response", response)
-                // newBooks.push(book);
 
                 this.setState( (currentState) => {
                     return ({"wantToRead": {Books: [...currentState["wantToRead"].Books, book]}})
