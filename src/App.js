@@ -56,13 +56,15 @@ class BooksApp extends React.Component {
 
     removeItemFromBookcase = (bookIndex, fromShelf) => {
         let books = this.state[fromShelf].Books;
-        const removedBooks = books.splice(bookIndex, 1);
-        console.log("Removed Book:", removedBooks[0]);
-        BooksAPI.update(removedBooks[0], "none")
+        let book = books[bookIndex];
+
+        console.log("Remove Book:", book);
+
+        BooksAPI.update(book, "none")
             .then((response) => {
                 console.log("Remove Response: ", response);
-
-                this.setState({[fromShelf]: {Books: books}});
+                let newBooks = books.filter((item) => item.id !== book.id )
+                this.setState({[fromShelf]: {Books: newBooks}});
             })
     }
 
@@ -71,7 +73,7 @@ class BooksApp extends React.Component {
 
         // dropped outside the list
         if (!destination) {
-            this.removeItemFromBookcase(source.id, source.droppableId);
+            this.removeItemFromBookcase(source.index, source.droppableId);
             return;
         }
 
@@ -89,7 +91,6 @@ class BooksApp extends React.Component {
         }
     }
 
-    // TODO: BUG, deletes wrong book
     // TODO: Filter searched books to not include ones in your library
 
     addNewBook = (book) => {
