@@ -14,7 +14,11 @@ class BooksApp extends React.Component {
         {title: "Want to Read", id: "wantToRead"},
         {title: "Read", id: "read"}]
 
-    state = {}
+    state = {
+        read: [],
+        wantToRead: [],
+        currentlyReading: []
+    }
 
     componentDidMount() {
         BooksAPI.getAll()
@@ -91,8 +95,6 @@ class BooksApp extends React.Component {
         }
     }
 
-    // TODO: Filter searched books to not include ones in your library
-
     addNewBook = (book) => {
         // console.log("Finally Add Book", book);
         // book.shelf = "wantToRead";
@@ -109,11 +111,21 @@ class BooksApp extends React.Component {
     }
 
     render() {
+        let allBooks = [];
+        allBooks = allBooks.concat(...this.shelves.map((shelf) => {
+            return (
+                this.state[shelf.id].Books
+            );
+        }));
+
         return (
             <div className="app">
                 <Route exact path={'/search'} render={() => {
                     return (
-                        <BookSearch addBook={this.addNewBook}/>
+                        <BookSearch
+                            addBook={this.addNewBook}
+                            currentBooks={allBooks}
+                        />
                     );
                 }}
                 />

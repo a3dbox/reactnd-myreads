@@ -21,18 +21,25 @@ export class BookSearch extends React.Component {
 
     listBooks = (query) => {
         if(query.length === 0) {
+            this.setState({"results": []});
             return [];
         }
 
         BooksAPI.search(query)
             .then((result) => {
                 let newBooks = result;
+                let currentBooks = this.props.currentBooks;
                 // console.log("Search Results:", newBooks);
-                if(newBooks === undefined || newBooks.length === 0) {
-                    newBooks = [];
+
+                // Filter out all books that are already in bookshelf
+                let currentBookIds = currentBooks.map((book) => (book.id));
+                let newBooksFiltered = newBooks.filter( (book) => !currentBookIds.includes( book.id ) );
+
+                if(newBooksFiltered === undefined || newBooksFiltered.length === 0) {
+                    newBooksFiltered = [];
                 }
 
-                this.setState({"results": newBooks});
+                this.setState({"results": newBooksFiltered});
             })
     }
 
